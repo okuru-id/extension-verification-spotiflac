@@ -39,3 +39,18 @@ Playwright + Chromium (~150 MB) are downloaded once into
 - The target SpotiFLAC-Web account (username + password) for the import step
 
 Credit: inspired by [SpotiFLAC-Mobile](https://github.com/spotiflacapp/SpotiFLAC-Mobile).
+
+## Provider scripts
+
+Each signed-session extension has its own script:
+
+```text
+verify-qobuz.mjs   qobuz-web@1.2.15
+verify-deezer.mjs  deezer@1.3.5
+verify-tidal.mjs   tidal-web@1.2.5
+verify-amazon.mjs  amzn@2.3.8
+```
+
+Usage is same as `verify-session.mjs`. YouTube Music, SoundCloud, Spotify Web,
+and Apple Music do not expose `signedSession` in their manifests, so this
+verification flow does not apply to them.
