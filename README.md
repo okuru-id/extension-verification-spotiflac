@@ -66,6 +66,16 @@ node verify-qobuz.mjs https://YOUR-SERVER USERNAME PASSWORD
 
 Ganti `qobuz` dengan `deezer`, `tidal`, atau `amazon` sesuai ekstensi.
 
+Untuk Linux/macOS/Git Bash/WSL, gunakan `curl` (bukan `curl.exe`) dan jalankan dari folder tempat file script diunduh:
+
+```bash
+cd ~/Downloads
+curl -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-amazon.mjs -o verify-amazon.mjs
+npm install playwright
+npx playwright install chromium --no-shell
+node verify-amazon.mjs https://YOUR-SERVER USERNAME PASSWORD
+```
+
 ## Android — Termux
 
 ```bash
