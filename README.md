@@ -1,27 +1,59 @@
 # SpotiFLAC — Extension Session Verification
 
-One-shot script that verifies a SpotiFLAC extension session against the
-Zarz gateway (Turnstile solved in a real Chromium window) and imports the
-session into a SpotiFLAC-Web instance. No project clone needed.
+Script verifikasi sesi ekstensi SpotiFLAC. Script membuka Chromium, menyelesaikan Turnstile melalui gateway Zarz, lalu mengimpor sesi ke SpotiFLAC-Web. Tidak perlu clone project.
 
-## Usage
+## Ekstensi yang didukung
+
+Satu ekstensi, satu script:
+
+| Ekstensi | File | Versi gateway | Import ID |
+|---|---|---:|---|
+| Qobuz | `verify-qobuz.mjs` | `qobuz-web@1.2.15` | `qobuz-web` |
+| Deezer | `verify-deezer.mjs` | `deezer@1.3.5` | `deezer` |
+| TIDAL | `verify-tidal.mjs` | `tidal-web@1.2.5` | `tidal-web` |
+| Amazon Music | `verify-amazon.mjs` | `amzn@2.3.8` | `amazon` |
+
+YouTube Music, SoundCloud, Spotify Web, dan Apple Music tidak memakai `signedSession`, jadi tidak memakai alur script ini.
+
+## Linux / macOS / Git Bash (WSL)
+
+Wrapper otomatis memasang Playwright + Chromium saat pertama kali dijalankan. Ganti `verify-qobuz.mjs` dengan script ekstensi yang dibutuhkan.
 
 ```bash
-# Linux / macOS / Git Bash (WSL)
 curl -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-session.sh | bash -s -- \
   https://YOUR-SERVER USERNAME PASSWORD
 ```
 
-```powershell
-# Windows — PowerShell
-curl.exe -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-session.mjs -o verify.mjs
-npm install playwright
-npx playwright install chromium --no-shell
-node verify.mjs https://YOUR-SERVER USERNAME PASSWORD
-```
+Wrapper di atas kompatibel dengan entrypoint lama `verify-session.mjs` (Qobuz). Untuk ekstensi lain, unduh script spesifik lalu jalankan Node:
 
 ```bash
-# Android — Termux (install from F-Droid / GitHub, not Play Store)
+curl -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-qobuz.mjs -o verify-qobuz.mjs
+npm install playwright
+npx playwright install chromium --no-shell
+node verify-qobuz.mjs https://YOUR-SERVER USERNAME PASSWORD
+```
+
+Contoh Deezer:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-deezer.mjs -o verify-deezer.mjs
+node verify-deezer.mjs https://YOUR-SERVER USERNAME PASSWORD
+```
+
+## Windows — PowerShell
+
+```powershell
+curl.exe -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spotiflac/main/verify-qobuz.mjs -o verify-qobuz.mjs
+npm install playwright
+npx playwright install chromium --no-shell
+node verify-qobuz.mjs https://YOUR-SERVER USERNAME PASSWORD
+```
+
+Ganti `qobuz` dengan `deezer`, `tidal`, atau `amazon` sesuai ekstensi.
+
+## Android — Termux
+
+```bash
 pkg update && pkg install proot-distro
 proot-distro install ubuntu && proot-distro login ubuntu
 apt update && apt install -y curl xvfb nodejs npm
@@ -29,28 +61,19 @@ curl -fsSL https://raw.githubusercontent.com/okuru-id/extension-verification-spo
   https://YOUR-SERVER USERNAME PASSWORD
 ```
 
-Playwright + Chromium (~150 MB) are downloaded once into
-`~/.cache/spotiflac-verify`; later runs are instant.
+Perintah wrapper memakai entrypoint Qobuz lama. Ekstensi lain perlu menjalankan file `.mjs` spesifik seperti contoh Linux.
 
-## Requirements
+## Persyaratan dan hasil
 
-- Node.js 18+, curl
-- A display (or Xvfb on headless Linux — used automatically)
-- The target SpotiFLAC-Web account (username + password) for the import step
+- Node.js 18+ dan `curl`.
+- Linux headless perlu Xvfb; wrapper mendeteksi dan memakai `xvfb-run` otomatis.
+- Chromium dan Playwright disimpan di `~/.cache/spotiflac-verify` oleh wrapper.
+- Saat gagal, screenshot tersimpan sebagai `session-verify-failure.png`.
+- Saat berhasil, sesi lokal tersimpan sebagai `session.<import-id>.json` dengan permission `0600`.
+- Jika target server diberikan, script langsung mengimpor sesi ke server. Kredensial dipakai hanya untuk login import.
+
+## Keamanan
+
+Jalankan hanya dari jaringan stabil. Gateway mengikat challenge dan pertukaran sesi ke jaringan yang sama. Jangan commit file `session.*.json`; file berisi grant sesi.
 
 Credit: inspired by [SpotiFLAC-Mobile](https://github.com/spotiflacapp/SpotiFLAC-Mobile).
-
-## Provider scripts
-
-Each signed-session extension has its own script:
-
-```text
-verify-qobuz.mjs   qobuz-web@1.2.15
-verify-deezer.mjs  deezer@1.3.5
-verify-tidal.mjs   tidal-web@1.2.5
-verify-amazon.mjs  amzn@2.3.8
-```
-
-Usage is same as `verify-session.mjs`. YouTube Music, SoundCloud, Spotify Web,
-and Apple Music do not expose `signedSession` in their manifests, so this
-verification flow does not apply to them.
