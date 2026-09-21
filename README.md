@@ -6,14 +6,29 @@ Script verifikasi sesi ekstensi SpotiFLAC. Script membuka Chromium, menyelesaika
 
 Satu ekstensi, satu script:
 
-| Ekstensi | File | Versi gateway | Import ID |
-|---|---|---:|---|
-| Qobuz | `verify-qobuz.mjs` | `qobuz-web@1.2.15` | `qobuz-web` |
-| Deezer | `verify-deezer.mjs` | `deezer@1.3.5` | `deezer` |
-| TIDAL | `verify-tidal.mjs` | `tidal-web@1.2.5` | `tidal-web` |
-| Amazon Music | `verify-amazon.mjs` | `amzn@2.3.8` | `amazon` |
+| Ekstensi | Deskripsi dari manifest | File | Versi gateway | Import ID |
+|---|---|---|---:|---|
+| Qobuz | Qobuz metadata and download provider for SpotiFLAC Mobile with resilient album search and track recovery, complete release metadata, credits, multi-disc totals, and original artwork. | `verify-qobuz.mjs` | `qobuz-web@1.2.15` | `qobuz-web` |
+| Deezer | Deezer metadata and lossless download provider with complete release, disc, barcode, credits, explicit, genre, rights, link, and high-resolution artwork metadata. | `verify-deezer.mjs` | `deezer@1.3.5` | `deezer` |
+| TIDAL | TIDAL metadata and search provider for SpotiFLAC Mobile using TIDAL public web endpoints. | `verify-tidal.mjs` | `tidal-web@1.2.5` | `tidal-web` |
+| Amazon Music | Amazon Music metadata & download provider for SpotiFLAC Mobile. Browse tracks, albums, artists, playlists from Amazon Music links and search. Downloads lossless and Dolby Atmos audio. | `verify-amazon.mjs` | `amzn@2.3.8` | `amazon` |
 
 YouTube Music, SoundCloud, Spotify Web, dan Apple Music tidak memakai `signedSession`, jadi tidak memakai alur script ini.
+
+## Deskripsi semua ekstensi
+
+Deskripsi berikut diambil dari `manifest.json` masing-masing ekstensi:
+
+| Ekstensi | Deskripsi |
+|---|---|
+| Qobuz | Qobuz metadata and download provider for SpotiFLAC Mobile with resilient album search and track recovery, complete release metadata, credits, multi-disc totals, and original artwork. |
+| Deezer | Deezer metadata and lossless download provider with complete release, disc, barcode, credits, explicit, genre, rights, link, and high-resolution artwork metadata. |
+| TIDAL | TIDAL metadata and search provider for SpotiFLAC Mobile using TIDAL public web endpoints. |
+| Amazon Music | Amazon Music metadata & download provider for SpotiFLAC Mobile. Browse tracks, albums, artists, playlists from Amazon Music links and search. Downloads lossless and Dolby Atmos audio. |
+| YouTube Music | YouTube Music metadata and download provider with native album, artist, explicit, release, and song-credit metadata plus validated catalog enrichment. |
+| SoundCloud | SoundCloud metadata and download provider. Search tracks, albums, playlists, artists. Downloads via direct SoundCloud streams. |
+| Spotify Web | Spotify metadata provider for SpotiFLAC Mobile with complete native release, disc, catalog ID, credits, and artwork metadata plus guarded genre enrichment. |
+| Apple Music | Apple Music metadata and lyrics provider for SpotiFLAC Mobile with guarded track matching, bounded caching, resilient requests, and complete release metadata. |
 
 ## Linux / macOS / Git Bash (WSL)
 
