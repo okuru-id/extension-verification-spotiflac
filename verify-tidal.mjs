@@ -13,7 +13,7 @@
 // is refreshed server-side, so importing it into the VM serves every user.
 //
 // Usage:
-//   scripts/verify-session.sh                                  # verify only, writes ./session.qobuz-web.json
+//   scripts/verify-session.sh                                  # verify only, writes .verify/session.qobuz-web.json
 //   scripts/verify-session.sh https://vm.example admin s3cret  # verify + import into that instance
 //
 // Requires: playwright chromium (npx playwright install chromium).
@@ -23,10 +23,14 @@
 
 import { execFileSync } from 'child_process';
 import { randomBytes } from 'crypto';
-import { writeFileSync, mkdtempSync, rmSync } from 'fs';
+import { writeFileSync, mkdirSync, mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { createRequire } from 'module';
+
+// session artifacts live in a subfolder, never the project root
+const OUT_DIR = '.verify';
+mkdirSync(OUT_DIR, { recursive: true });
 
 const APP_VERSION = 'tidal-web@1.2.5';
 const GATEWAY = 'https://api.zarz.moe/v2';
@@ -96,11 +100,11 @@ for (let i = 0; i < 22; i++) {
   }
 }
 if (!grant) {
-  await page.screenshot({ path: 'session-verify-failure.png' }).catch(() => {});
+  await page.screenshot({ path: `${OUT_DIR}/session-verify-failure.png` }).catch(() => {});
 }
 await browser.close();
 if (!grant) {
-  console.error('no grant captured within 90s — run on a desktop and click the checkbox manually (screenshot: session-verify-failure.png)');
+  console.error('no grant captured within 90s — run on a desktop and click the checkbox manually (screenshot: .verify/session-verify-failure.png)');
   process.exit(1);
 }
 console.log('grant:', grant.slice(0, 16) + '…');
@@ -129,7 +133,7 @@ const record = {
   session_secret: session.session_secret,
   expires_at: session.expires_at,
 };
-const outFile = `session.${EXT_ID}.json`;
+const outFile = `${OUT_DIR}/session.${EXT_ID}.json`;
 writeFileSync(outFile, JSON.stringify(record, null, 2) + '\n', { mode: 0o600 });
 console.log('wrote', outFile);
 

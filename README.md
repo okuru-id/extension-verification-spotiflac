@@ -93,12 +93,12 @@ Perintah wrapper memakai entrypoint Qobuz lama. Ekstensi lain perlu menjalankan 
 - Node.js 18+ dan `curl`.
 - Linux headless perlu Xvfb; wrapper mendeteksi dan memakai `xvfb-run` otomatis.
 - Chromium dan Playwright disimpan di `~/.cache/spotiflac-verify` oleh wrapper.
-- Saat gagal, screenshot tersimpan sebagai `session-verify-failure.png`.
-- Saat berhasil, sesi lokal tersimpan sebagai `session.<import-id>.json` dengan permission `0600`.
+- Saat gagal, screenshot tersimpan sebagai `.verify/session-verify-failure.png`.
+- Saat berhasil, sesi lokal tersimpan sebagai `.verify/session.<import-id>.json` dengan permission `0600` — tidak pernah di folder root.
 - Jika target server diberikan, script langsung mengimpor sesi ke server. Kredensial dipakai hanya untuk login import.
 
 ## Keamanan
 
-Jalankan hanya dari jaringan stabil. Gateway mengikat challenge dan pertukaran sesi ke jaringan yang sama. Jangan commit file `session.*.json`; file berisi grant sesi.
+Jalankan hanya dari jaringan stabil. Gateway mengikat challenge dan pertukaran sesi ke jaringan yang sama. Jangan commit file `session.*.json` dan `.verify/`; file berisi grant sesi.
 
 Credit: inspired by [SpotiFLAC-Mobile](https://github.com/spotiflacapp/SpotiFLAC-Mobile).
